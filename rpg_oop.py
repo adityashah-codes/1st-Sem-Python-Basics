@@ -10,6 +10,7 @@ class character:
         self.max_dmg = max_dmg
         self.potion = potion
         self.shield = shield
+        self.shield_active = False
 
     def dmg(self, crt):
         hit = random.randint(self.min_dmg, self.max_dmg)
@@ -20,7 +21,15 @@ class character:
     
     def attack(self, target):
         damage = self.dmg(20)
+        
+        if target.shield_active:
+            damage = int(damage * 0.1)
+            target.shield_active = False
+            print(f"Shield absorbed 90% damage ")
+        
+        
         target.hp = target.hp - damage
+        
         if target.hp <= 0:
             target.hp = 0
             print(f"{target.name} fallen")
@@ -47,15 +56,20 @@ class character:
             print(f"You are out of Potions")
             return False        
 
-    def shield(self):
-        if self.shield > 0:
-            self.dmg() = self.dmg() * .1
-            print("Shield activated")
+    def activate_shield(self):
+        if self.shield_active:
+            print("shield is already active")
             return True
         else:
-            print("You are out of shields")
-        return False
-        
+            if self.shield > 0:
+                print("Shield activated")
+                self.shield = self.shield - 1
+                self.shield_active = True        
+                return True
+            else:
+                print("You are out of shields")
+                return False
+            
 
     def stamina(self):
         pass
@@ -107,8 +121,7 @@ while hero.hp > 0 and enemy.hp > 0:
             pass
 
         elif action.upper() == "S":
-            if hero.shield():
-                current_turn = "enemy"
+            hero.activate_shield()
 
         elif action.upper() == "I":
             pass
