@@ -2,7 +2,7 @@ import random
 
 class character:
  
-    def __init__(self, name, hp, max_hp, min_dmg, max_dmg, potion, shield):
+    def __init__(self, name, hp, max_hp, min_dmg, max_dmg, potion, shield, stamina, max_stamina):
         self.name = name
         self.hp = hp
         self.max_hp = max_hp
@@ -11,6 +11,8 @@ class character:
         self.potion = potion
         self.shield = shield
         self.shield_active = False
+        self.stamina = stamina
+        self.max_stamina = max_stamina
 
     def dmg(self, crt):
         hit = random.randint(self.min_dmg, self.max_dmg)
@@ -24,6 +26,8 @@ class character:
         
         if target.shield_active:
             damage = int(damage * 0.1)
+            if damage <= 0:
+                damage = 1
             target.shield_active = False
             print(f"Shield absorbed 90% damage ")
         
@@ -70,18 +74,35 @@ class character:
                 print("You are out of shields")
                 return False
             
+    def check_stamina(self):
+        
+        if self.stamina <= 20:
+            print(f"you are out of stamina\nCurrent stamina:{self.stamina}")
+            return True
+        else:            
+            return False
+        
+    def recover_stamina(self):
+        self.stamina = self.stamina + 25
+        if self.stamina > self.max_stamina:
+            self.stamina = self.max_stamina
 
-    def stamina(self):
-        pass
+        print(f"Recovered stamina by 25\ncurrent stamina:{self.stamina}")
+
+    def deduct_stamina(self):
+        self.stamina = self.stamina - 20
+        if self.stamina < 0:
+            self.stamina = 0
+
 
 class data:
     pass
     
-hero = character("Hero", 100, 100, 5, 18, 3, 1)
+hero = character("Hero", 100, 100, 5, 18, 3, 1, 50, 50)
 
-mon_1 = character("Goblin", 50, 50, 2, 10, 1, 0)
-mon_2 = character("Orc Berserker", 50, 50, 2, 10, 1, 0)
-mon_3 = character("Mountain Troll", 50, 50, 2, 10, 1, 0)
+mon_1 = character("Goblin", 50, 50, 2, 10, 1, 0, 0, 0)
+mon_2 = character("Orc Berserker", 50, 50, 2, 10, 1, 0, 0, 0)
+mon_3 = character("Mountain Troll", 50, 50, 2, 10, 1, 0, 0, 0)
         
 monster_pool = [mon_1, mon_2, mon_3]
 enemy = random.choice(monster_pool)
@@ -104,13 +125,18 @@ while hero.hp > 0 and enemy.hp > 0:
         "----> ")
 
         if action.upper() == "A":
-
-            if hero.attack(enemy):
-                print("You won")
-                break
             
+            hero.check_stamina()
+            if hero.stamina >= 20:
+                
+                if hero.attack(enemy):
+                    print("You won")                    
+                    break
+                hero.deduct_stamina()
+            else:
+                continue
+                
             current_turn = "enemy"
-
         elif action.upper() == "P":
             
             if hero.use_potion():
@@ -118,7 +144,8 @@ while hero.hp > 0 and enemy.hp > 0:
                 current_turn = "enemy"
                 
         elif action.upper() == "R":
-            pass
+            hero.recover_stamina()
+            continue
 
         elif action.upper() == "S":
             hero.activate_shield()
