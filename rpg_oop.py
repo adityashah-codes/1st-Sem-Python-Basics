@@ -151,10 +151,10 @@ while hero.hp > 0 and enemy.hp > 0:
             hero.activate_shield()
 
         elif action.upper() == "I":
-            pass
+            print(f"----Inventory----\nShield:{hero.shield}\nPotions:{hero.potion}")
 
         elif action.upper() == "E":
-            pass
+            break
 
     elif current_turn == "enemy":
             
