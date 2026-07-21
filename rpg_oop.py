@@ -1,4 +1,5 @@
 import random
+import json
 
 class character:
  
@@ -93,11 +94,38 @@ class character:
         self.stamina = self.stamina - 20
         if self.stamina < 0:
             self.stamina = 0
-
-
-class data:
-    pass
     
+class data:
+    @staticmethod
+    def save_data(hero, filename="save_data.json"):
+        save_profile = { 
+            "name": hero.name,
+            "hp": hero.hp,
+            "max_hp": hero.max_hp,
+            "potion": hero.potion,
+            "shield": hero.shield,
+            "stamina": hero.stamina,
+            "max_stamina": hero.max_stamina 
+            }
+
+        try:
+            with open(filename, "w") as file:
+                json.dump(save_profile, file, indent=4)
+                print("Saved Prgogress succ")
+        except FileNotFoundError:
+            print("error")
+        except IOError:
+            print("error")
+
+    @staticmethod
+    def print_data(filename="save_data.json"):
+        try: 
+            with open(filename, "r") as file:
+                data_content = json.load(file)
+                print(json.dumps(data_content, indent=4))
+        except FileNotFoundError:
+            print("no save found")
+
 hero = character("Hero", 100, 100, 5, 18, 3, 1, 50, 50)
 
 mon_1 = character("Goblin", 50, 50, 2, 10, 1, 0, 0, 0)
@@ -164,9 +192,5 @@ while hero.hp > 0 and enemy.hp > 0:
                 break
             current_turn = "player"
             
-                
-
-
-
-# print(hero.dmg_to_hero(enemy))
-# print(hero.dmg(20))
+data.save_data(hero)
+data.print_data()          
