@@ -65,7 +65,7 @@ while True:
 
             else:
                 del contacts[del_contact]
-                print(f"Contact deleted - {del_contact}(Phone no - {contacts[search_contact]})")
+                print(f"Contact deleted - {del_contact}(Phone no - {contacts[del_contact]})")
                 continue
             
         elif action == "4":
@@ -74,7 +74,7 @@ while True:
                 print("No contacts saved")
                 continue
 
-            print("----Saved Contacts----")
+            print("----Saved Contacts----\n")
 
             for i,(key, value) in enumerate(contacts.items(), start=1):
                 print(f"({i})Name: {key}\n   Phone no: {value}\n")
@@ -87,7 +87,8 @@ while True:
         break
 
     else:
+        print(f"Invalid input {action}\nEnter from the given options.")
         continue 
 
-print(contacts)        
+       
 
