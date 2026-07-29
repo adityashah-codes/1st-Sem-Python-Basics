@@ -43,7 +43,7 @@ while True:
             print(f"Roll no ({roll_no}) already exists.")
         else:
             students_name = input("Enter students name:")
-            if students_name.isdigit():
+            if not students_name or students_name.isdigit():
                 print("Invalid name")
                 continue
             else:
@@ -86,8 +86,8 @@ while True:
         if not students:
             print("No records found")
         else:
-            for roll_no,items in students:
-                print(f"Roll no: {roll_no}\nName: {items["Name"]}\nMark: {items["Marks"]}\n----------")
+            for roll_no,items in students.items():
+                print(f"Roll no: {roll_no}\nName: {items['Name']}\nMark: {items['Marks']}\n----------")
 
     elif action == "4":
 
@@ -113,7 +113,7 @@ while True:
                 if action_for_change == "1":
                     new_name = input("Enter new name: ")
 
-                    if new_name.isdigit():
+                    if not new_name or new_name.isdigit():
                         print("Invlid Name")
                         continue
                     else:
