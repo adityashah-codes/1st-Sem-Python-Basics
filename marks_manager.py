@@ -13,8 +13,8 @@ def load_data():
 def save_data(data):
     
 
-        with open("students_data.json", "w") as file:
-            json.dump(data, file, indent=4)
+    with open("students_data.json", "w") as file:
+        json.dump(data, file, indent=4)
 
 students = load_data()
 
@@ -33,25 +33,47 @@ while True:
     if action == "1":
 
         roll_no = input("Enter Roll NO. : ")
+        if roll_no.isdigit():
+            pass
+        else:
+            print("invalid ROll NO")
+            continue
 
         if roll_no in students:
             print(f"Roll no ({roll_no}) already exists.")
         else:
             students_name = input("Enter students name:")
+            if students_name.isdigit():
+                print("Invalid name")
+                continue
+            else:
+                pass
+
             students_mark = input("Enter students mark : ")
-            
+            if students_mark.isdigit():
+                pass
+            else:
+                print('invalid MArk')
+                continue
+
             students[roll_no] ={
                 "Name": students_name,
                 "Marks": students_mark
             }
-
-        save_data(students)
-        print("Data saved succesfully.")
+            save_data(students)
+            print("Data saved succesfully.")
+        
         continue
 
     elif action == "2":
 
         roll_no = input("Enter Roll no: ")
+
+        if roll_no.isdigit():
+            pass
+        else:
+            print("invalid roll number")
+            continue
 
         if roll_no in students:
             student = students[roll_no]
@@ -64,11 +86,18 @@ while True:
         if not students:
             print("No records found")
         else:
-            for roll_no, info in students.items():
-                print(f"{roll_no}\t|\t{info['Name']}\t|\t{info['Marks']}")
+            for roll_no,items in students:
+                print(f"Roll no: {roll_no}\nName: {items["Name"]}\nMark: {items["Marks"]}\n----------")
+
     elif action == "4":
 
         roll_no = input("Enter the Roll number: ")
+        if roll_no.isdigit():
+            pass
+        else:
+            print("invalid ROll NO")
+            continue
+
 
         if roll_no in students:
 
@@ -83,13 +112,29 @@ while True:
 
                 if action_for_change == "1":
                     new_name = input("Enter new name: ")
+
+                    if new_name.isdigit():
+                        print("Invlid Name")
+                        continue
+                    else:
+                        pass
+
                     students[roll_no]["Name"] = new_name
+                    save_data(students)
                     print("Students name updated successfully.")
                     break
                     
                 elif action_for_change == "2":
                     new_mark = input("Enter new Mark: ")
+
+                    if new_mark.isdigit():
+                        pass
+                    else:
+                        print("Invalid Mark")
+                        continue
+
                     students[roll_no]["Marks"] = new_mark
+                    save_data(students)
                     print("Students Mark updated successfully.")
                     break
                                         
