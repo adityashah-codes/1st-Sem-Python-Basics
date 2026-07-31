@@ -13,7 +13,7 @@ def withdraw(amt):
     if amt <= 0:
         print("Please enter an amount greater than zero.")
         return
-    if amt >= bal:
+    if amt > bal:
         print(f"Not sufficient balance\nCurrent Balance - {bal}")    
     else:
         bal = bal - amt
