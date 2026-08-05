@@ -1,46 +1,80 @@
+from datetime import datetime, timedelta
+
+class vitualclock:
+
+    def __init__(self):
+        self.current_time = datetime.now()
+
+    def advance_time(self, hours=0, days=0):
+        self.current_time += timedelta(hours=hours,days=days)
+        print(f"Advanced Time by {timedelta(hours=hours,days=days)}\nCurrent Time: {self.current_time}")
+
+    def revrse_time(self, hours=0, days=0):
+        self.current_time -= timedelta(hours=hours,days=days)
+        print(f"Reversed Time by {timedelta(hours=hours,days=days)}\nCurrent Time: {self.current_time}")
+
 class rooms:
 
-    def __init__(self, room_no, room_name, max_occupancy, room_rate, status):
+    def __init__(self, room_no, room_rate):
         self.room_no = room_no
-        self.room_name = room_name
-        self.max_occupancy = max_occupancy
         self.room_rate = room_rate
-        self.status = status    
+        self.booking_end_time = None
 
-    def is_available(self):
-        return self.status
+    def booking(self, starting_booking_time, duration):
+        self.booking_end_time = starting_booking_time + timedelta(hours=duration)
 
+    def is_available(self, current_time):
+        if self.booking_end_time is None or self.booking_end_time <= current_time:
+            return True   
+        return False
 
+clock = vitualclock()
 
-room_101 = rooms(101, "Standard", 2,  "800$", True)
-room_102 = rooms(102, "Delux", 3, "2000$", True)
-room_103 = rooms(103, "Suite", 1, "3000$", True)
+room_101 = rooms(101, 800)
+room_102 = rooms(102, 2000)
+room_103 = rooms(103, 3000)
 
-room_list = {
+all_room = {
     101: room_101,
     102: room_102,
     103: room_103
 }
 
-def search_menu():
+def menu():
 
-    date = input("Enter Check-In Date (YYYY-MM-DD): ")
-    duration = input("Enter Duration (Nights): ")
-    category = int(input("Select Category [1: Standard, 2: Deluxe, 3: Suite]: "))
-    return date, duration, category 
+    choice = input("" \
+    "      [MAIN MENU]\n\n" \
+    "1. Search Available Rooms\n" \
+    "2. Create New Reservation\n" \
+    "3. Modify / Cancel Reservation\n" \
+    "4. Process Check-Out & Generate Invoice\n" \
+    "5. Exit\n\n"
+    "Select Option (1-5): ")
+    return choice
 
+while True:
 
-date, duration, action = search_menu()
+    menu_choice = menu()
 
-selected_room = room_list[100 + action]
-print(selected_room.room_name)
+    if menu_choice == "1":
 
-if selected_room.is_available():
-    print("availabe")
-    selected_room.status = False
+        room_to_book = input("Which Room no you want to book(1-3): ")
+        searched_room = all_room[100 + int(room_to_book)]
 
-else:
-    print("unavailabe")
+        if searched_room.is_available(clock.current_time):
+            print("Room is available.")
+            ask_for_booking = input("Do you want book room (y/n): ")
 
+            if ask_for_booking.lower() == "y":
+                date_str = input("Enter Booking start time (dd-mm-yyyy HH:MM or press Enter for NOW): ")
+                if date_str.strip():
+                    booking_start_time = datetime.strptime(date_str, "%d-%m-%Y %H:%M")
+                else:
+                    booking_start_time = clock.current_time    
+                duration = input("Enter duration (in hrs): ")
+                searched_room.booking(booking_start_time, int(duration))
+                print("Room booked succesfully.")
 
+        else:
+            print("room currently unavilabe")
 
